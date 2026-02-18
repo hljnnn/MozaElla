@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Valentine Heart Pop</title>
+    <style>
+        :root {
+            --pink: #ff4d6d;
+            --soft-pink: #ffccd5;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--soft-pink);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            touch-action: manipulation;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .stat {
+            font-size: 1.5rem;
+            color: var(--pink);
+            font-weight: bold;
+            text-shadow: 1px 1px white;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 50px; /* Big enough for thumbs */
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
+            filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.1));
+        }
+
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            display: none;
+            z-index: 20;
+        }
+
+        button {
+            background: var(--pink);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+         .btn-back {
+            background: var(--pink);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .heart {
+        position: absolute;
+        cursor: pointer;
+        user-select: none;
+        transition: transform 0.1s;
+        filter: drop-shadow(2px 2px 5px rgba(0,0,0,0.1));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Style for the falling face image */
+  .face-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover; /* This prevents the face from looking stretched */
+    border: 3px solid white;
+}
+
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="ui-layer">
+        <div class="stat">Score: <span id="score">0</span></div>
+        <div class="stat">Time: <span id="timer">30</span>s</div>
+    </div>
+
+    <div id="message">
+        <h2 id="msg-text">Happy Valentine's Day!</h2>
+        <p>You caught <span id="final-score">0</span> hearts!</p>
+        <button onclick="startGame()">Play Again</button>
+        <a href="rose.html" class="btn-back">Back to Rose</a>
+    </div>
+</div>
+
+<script>
+    let score = 0;
+    let timeLeft = 30;
+    let gameActive = false;
+    const container = document.getElementById('game-container');
+    const scoreEl = document.getElementById('score');
+    const timerEl = document.getElementById('timer');
+    const messageEl = document.getElementById('message');
+
+    function startGame() {
+        score = 0;
+        timeLeft = 30;
+        gameActive = true;
+        scoreEl.innerText = score;
+        timerEl.innerText = timeLeft;
+        messageEl.style.display = 'none';
+        
+        spawnObject(); // Renamed from spawnHeart
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerEl.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                endGame();
+            }
+        }, 1000);
+    }
+
+    function spawnObject() {
+    if (!gameActive) return;
+
+    const obj = document.createElement('div');
+    obj.className = 'heart';
+    
+    // Array of your partner's photos
+    const faceImages = ['falling1.jpg'];
+
+    // 70% chance for a heart, 30% chance for one of the 3 faces
+    if (Math.random() > 0.3) {
+        obj.innerHTML = '❤️';
+        obj.style.fontSize = '50px';
+    } else {
+        const img = document.createElement('img');
+        
+        // Pick a random image from the array
+        const randomFace = faceImages[Math.floor(Math.random() * faceImages.length)];
+        
+        img.src = randomFace;
+        img.className = 'face-img';
+        obj.appendChild(img);
+    }
+    
+    const x = Math.random() * (window.innerWidth - 60);
+    obj.style.left = x + 'px';
+    obj.style.top = '-80px';
+
+    const popObject = () => {
+        score++;
+        scoreEl.innerText = score;
+        obj.innerHTML = '✨'; 
+        setTimeout(() => obj.remove(), 100);
+    };
+
+    obj.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        popObject();
+    });
+    obj.addEventListener('mousedown', popObject);
+
+    container.appendChild(obj);
+
+    let top = -80;
+    const fallSpeed = 3 + Math.random() * 4;
+
+    const fallInterval = setInterval(() => {
+        if (!gameActive) {
+            obj.remove();
+            clearInterval(fallInterval);
+        }
+        top += fallSpeed;
+        obj.style.top = top + 'px';
+
+        if (top > window.innerHeight) {
+            obj.remove();
+            clearInterval(fallInterval);
+        }
+    }, 16);
+
+    setTimeout(spawnObject, 600 + Math.random() * 400);
+}
+    function endGame() {
+        gameActive = false;
+        document.getElementById('final-score').innerText = score;
+        messageEl.style.display = 'block';
+    }
+
+    startGame();
+</script>
+
+<audio id="globalMusic" loop>
+    <source src="untilifoundyou.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    window.onload = function() {
+        const audio = document.getElementById('globalMusic');
+        const isMusicPlaying = localStorage.getItem('musicPlaying');
+        const savedTime = localStorage.getItem('musicTimestamp');
+
+        if (isMusicPlaying === 'true') {
+            // 1. Set the time immediately before playing
+            if (savedTime) {
+                // We add a tiny offset (0.1s) to account for page load lag
+                audio.currentTime = parseFloat(savedTime) + 0.1;
+            }
+
+            // 2. Start with volume at 0 for a smooth fade-in
+            audio.volume = 0;
+            
+            audio.play().then(() => {
+                // 3. Smooth Fade-In effect
+                let vol = 0;
+                const fadeIn = setInterval(() => {
+                    if (vol < 1) {
+                        vol += 0.05;
+                        audio.volume = Math.min(vol, 1);
+                    } else {
+                        clearInterval(fadeIn);
+                    }
+                }, 50); // Increase volume every 50ms
+            }).catch(error => {
+                console.log("Interaction required to resume music.");
+            });
+        }
+
+        // 4. Ultra-fast Sync (Updates every 100ms instead of 500ms)
+        // This makes sure that if the user clicks a link suddenly, 
+        // the saved timestamp is as accurate as possible.
+        setInterval(() => {
+            if (!audio.paused) {
+                localStorage.setItem('musicTimestamp', audio.currentTime);
+            }
+        }, 100);
+    };
+
+    // 5. Save exactly when the user clicks a link/leaves
+    window.onbeforeunload = function() {
+        const audio = document.getElementById('globalMusic');
+        if (audio) {
+            localStorage.setItem('musicTimestamp', audio.currentTime);
+        }
+    };
+</script>
+
+</body>
+</html>

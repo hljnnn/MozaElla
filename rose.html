@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Precious Rose</title>
+    <style>
+        @media (max-width: 480px) {
+    .rose-wrapper {
+        transform: scale(0.8); /* Shrink the flower slightly for small screens */
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    /* If using the bouquet version from earlier */
+    .bouquet-container {
+        transform: scale(0.7);
+    }
+}
+        :root {
+            --rose-main: #ff4d6d;
+            --rose-dark: #c9184a;
+            --rose-light: #ffb3c1;
+            --bg-color: #fff0f3;
+            --text-color: #ff4d6d;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+            overflow: hidden;
+        }
+
+        /* ✨ Background Sparkles */
+        .sparkle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: twinkle 2s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1); opacity: 0.8; }
+        }
+
+        /* 🌹 The Rose Container */
+        .rose-wrapper {
+            position: relative;
+            animation: bobbing 3s infinite ease-in-out;
+            cursor: pointer;
+        }
+
+        @keyframes bobbing {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .rose-head {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            animation: bloom 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* 🌸 Cute Rounded Petals */
+        .petal {
+            width: 55px;
+            height: 55px;
+            background: radial-gradient(circle, var(--rose-light), var(--rose-main));
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 2px 2px 10px rgba(255, 77, 109, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .p1 { top: -10px; left: 12.5px; }
+        .p2 { top: 10px; right: -5px; transform: rotate(72deg); }
+        .p3 { bottom: -5px; right: 5px; transform: rotate(144deg); }
+        .p4 { bottom: -5px; left: 5px; transform: rotate(216deg); }
+        .p5 { top: 10px; left: -5px; transform: rotate(288deg); }
+
+        .center {
+            width: 35px;
+            height: 35px;
+            background: var(--rose-dark);
+            border-radius: 50%;
+            position: absolute;
+            top: 22.5px;
+            left: 22.5px;
+            z-index: 10;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        /* 🌿 The Stem */
+        .stem {
+            width: 8px;
+            height: 120px;
+            background: linear-gradient(to bottom, #40916c, #2d6a4f);
+            margin: -5px auto 0;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+            z-index: -1;
+        }
+
+        .leaf {
+            width: 35px;
+            height: 20px;
+            background: #52b788;
+            border-radius: 50% 0 50% 0;
+            position: absolute;
+            top: 40px;
+            left: 8px;
+            transform: rotate(-15deg);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* 💌 Message Styling */
+        .message {
+            margin-top: 40px;
+            text-align: center;
+            color: var(--text-color);
+            animation: fadeIn 3s ease-in;
+        }
+
+        h1 { font-size: 2.2rem; margin: 0; text-shadow: 2px 2px white; }
+        p { font-size: 1.1rem; font-style: italic; opacity: 0.8; }
+
+         .btn-back {
+            margin-top: 50px;
+            padding: 10px 30px;
+            background: var(--rose-pink);
+            color: #ff8dad;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 20;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            background: #c9184a;
+            transform: scale(1.1);
+        }
+
+        @keyframes bloom {
+            from { transform: scale(0) rotate(-45deg); opacity: 0; }
+            to { transform: scale(1.2) rotate(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rose-wrapper" onclick="createHeartExplosion(event)">
+        <div class="rose-head">
+            <div class="center"></div>
+            <div class="petal p1"></div>
+            <div class="petal p2"></div>
+            <div class="petal p3"></div>
+            <div class="petal p4"></div>
+            <div class="petal p5"></div>
+        </div>
+        <div class="stem">
+            <div class="leaf"></div>
+        </div>
+    </div>
+
+    <div class="message">
+        <h1>Happy Valentine's Day!</h1>
+        <p>A simple rose for the cutiest person I know.</p>
+    </div>
+
+    <a href="display.html" class="btn-back">See Photo</a>
+    <a href="message.html" class="btn-back">Back to Message</a>
+
+
+    <script>
+        // Generate random sparkles in the background
+        function createSparkles() {
+            for (let i = 0; i < 20; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                const size = Math.random() * 8 + 4 + 'px';
+                sparkle.style.width = size;
+                sparkle.style.height = size;
+                sparkle.style.left = Math.random() * 100 + 'vw';
+                sparkle.style.top = Math.random() * 100 + 'vh';
+                sparkle.style.animationDelay = Math.random() * 2 + 's';
+                document.body.appendChild(sparkle);
+            }
+        }
+
+        // Surprise: Click the rose to make it "pop" with color
+        function createHeartExplosion(e) {
+            const heart = document.createElement('div');
+            heart.innerHTML = '💖';
+            heart.style.position = 'absolute';
+            heart.style.left = e.clientX + 'px';
+            heart.style.top = e.clientY + 'px';
+            heart.style.fontSize = '2rem';
+            heart.style.pointerEvents = 'none';
+            heart.style.animation = 'fadeOutUp 1s forwards';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 1000);
+        }
+
+        // Add the fade out up animation to CSS
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes fadeOutUp { 
+            to { opacity: 0; transform: translateY(-50px) scale(1.5); } 
+        }`;
+        document.head.appendChild(style);
+
+        createSparkles();
+    </script>
+
+    <audio id="globalMusic" loop>
+    <source src="untilifoundyou.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    window.onload = function() {
+        const audio = document.getElementById('globalMusic');
+        const isMusicPlaying = localStorage.getItem('musicPlaying');
+        const savedTime = localStorage.getItem('musicTimestamp');
+
+        if (isMusicPlaying === 'true') {
+            // 1. Set the time immediately before playing
+            if (savedTime) {
+                // We add a tiny offset (0.1s) to account for page load lag
+                audio.currentTime = parseFloat(savedTime) + 0.1;
+            }
+
+            // 2. Start with volume at 0 for a smooth fade-in
+            audio.volume = 0;
+            
+            audio.play().then(() => {
+                // 3. Smooth Fade-In effect
+                let vol = 0;
+                const fadeIn = setInterval(() => {
+                    if (vol < 1) {
+                        vol += 0.05;
+                        audio.volume = Math.min(vol, 1);
+                    } else {
+                        clearInterval(fadeIn);
+                    }
+                }, 50); // Increase volume every 50ms
+            }).catch(error => {
+                console.log("Interaction required to resume music.");
+            });
+        }
+
+        // 4. Ultra-fast Sync (Updates every 100ms instead of 500ms)
+        // This makes sure that if the user clicks a link suddenly, 
+        // the saved timestamp is as accurate as possible.
+        setInterval(() => {
+            if (!audio.paused) {
+                localStorage.setItem('musicTimestamp', audio.currentTime);
+            }
+        }, 100);
+    };
+
+    // 5. Save exactly when the user clicks a link/leaves
+    window.onbeforeunload = function() {
+        const audio = document.getElementById('globalMusic');
+        if (audio) {
+            localStorage.setItem('musicTimestamp', audio.currentTime);
+        }
+    };
+</script>
+
+</body>
+</html>

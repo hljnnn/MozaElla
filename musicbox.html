@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Music Box</title>
+    <style>
+        body {
+            background-color: #fff0f3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        .instruction {
+            color: #ff4d6d;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        /* Music Box Visuals */
+        .music-box {
+            width: 150px;
+            height: 120px;
+            background: #ff4d6d;
+            position: relative;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .music-box:hover { transform: scale(1.05); }
+
+        .lid {
+            width: 150px;
+            height: 40px;
+            background: #c9184a;
+            position: absolute;
+            top: 0;
+            border-radius: 10px 10px 0 0;
+            transition: transform 0.8s ease;
+            transform-origin: bottom;
+            z-index: 2;
+        }
+
+        .music-box.open .lid {
+            transform: rotateX(-110deg);
+        }
+
+        .heart-inside {
+            position: absolute;
+            top: 20px;
+            left: 55px;
+            font-size: 2rem;
+            opacity: 0;
+            transition: 0.5s;
+        }
+
+        .music-box.open .heart-inside {
+            opacity: 1;
+            animation: floatUp 2s infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .btn-next {
+            margin-top: 50px;
+            padding: 15px 40px;
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            display: none; /* Only shows after box opens */
+            cursor: pointer;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instruction">Open your surprise...</div>
+
+    <div class="music-box" id="mainBox" onclick="openBox()">
+        <div class="lid"></div>
+        <div class="heart-inside">❤️</div>
+    </div>
+
+    <a href="message.html" class="btn-next" id="nextBtn">Continue to Message</a>
+
+    <audio id="bgMusic" loop>
+        <source src="untilifoundyou.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function openBox() {
+            const box = document.getElementById('mainBox');
+            const audio = document.getElementById('bgMusic');
+            const btn = document.getElementById('nextBtn');
+
+            box.classList.add('open');
+            
+            // Play music
+            audio.play();
+
+            // Store music state in LocalStorage
+            localStorage.setItem('musicPlaying', 'true');
+
+            // Show continue button
+            setTimeout(() => {
+                btn.style.display = 'block';
+            }, 1000);
+        }
+
+        // Sync audio time constantly so other pages know where we are
+        const audio = document.getElementById('bgMusic');
+        setInterval(() => {
+            if (!audio.paused) {
+                localStorage.setItem('musicTimestamp', audio.currentTime);
+            }
+        }, 500);
+    </script>
+</body>
+</html>

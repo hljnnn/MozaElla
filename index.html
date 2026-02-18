@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none">
+    <title>Valentine's Day Countdown</title>
+    <style>
+        body {
+            background-color: #fff0f3;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #ff4d6d;
+            overflow: hidden;
+        }
+        .container { text-align: center; width: 100%; }
+        h1 { font-size: 2rem; margin-bottom: 20px; }
+        #timer {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: nowrap;
+        }
+        .time-box {
+            background: #ffb3c1;
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            min-width: 65px;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+        }
+        .time-box span { display: block; font-size: 1.5rem; font-weight: bold; }
+        .label { font-size: 0.7rem; text-transform: uppercase; }
+        #proceedBtn {
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 30px;
+            background-color: #ff4d6d;
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+            opacity: 0.4;
+            width: 80%;
+            max-width: 300px;
+        }
+        #proceedBtn:enabled { opacity: 1; cursor: pointer; }
+        
+        @media (max-width: 400px) {
+            .time-box { min-width: 50px; padding: 10px; }
+            h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Valentine's Day Countdown</h1>
+        <div id="timer">
+            <div class="time-box"><span id="days">00</span><span class="label">Days</span></div>
+            <div class="time-box"><span id="hours">00</span><span class="label">Hours</span></div>
+            <div class="time-box"><span id="minutes">00</span><span class="label">Mins</span></div>
+            <div class="time-box"><span id="seconds">00</span><span class="label">Secs</span></div>
+        </div>
+        <button id="proceedBtn" disabled onclick="location.href='musicbox.html'">Proceed</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

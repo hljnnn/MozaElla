@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Gallery</title>
+    <style>
+        :root {
+            --rose-pink: #ff4d6d;
+            --soft-pink: #fff0f3;
+            --accent-pink: #ffb3c1;
+        }
+
+        body {
+            background-color: var(--soft-pink);
+            font-family: 'Segoe UI', cursive, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Changed to start to allow scrolling */
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Hearts */
+        .heart-bg {
+            position: fixed; /* Fixed so they stay in view while scrolling */
+            color: rgba(255, 77, 109, 0.2);
+            font-size: 1.2rem;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatUp 6s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Gallery Wrapper */
+        .gallery-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            z-index: 10;
+        }
+
+        /* Polaroid Photo Frame */
+        .photo-container {
+            position: relative;
+            background: white;
+            padding: 12px 12px 50px 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.4s ease, z-index 0s;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        /* Giving each photo a slightly different tilt */
+        .photo-container:nth-child(odd) { transform: rotate(-3deg); }
+        .photo-container:nth-child(even) { transform: rotate(2deg); }
+        .photo-container:nth-child(3n) { transform: rotate(4deg); }
+
+        .photo-container:hover {
+            transform: rotate(0deg) scale(1.1);
+            z-index: 50;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
+        .photo-container img {
+            width: 220px;
+            height: 250px;
+            object-fit: cover;
+            border: 1px solid #eee;
+            display: block;
+        }
+
+        /* Caption Text */
+        .caption {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            left: 0;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 1.4rem;
+            color: #590d22;
+        }
+
+        .btn-back {
+            margin: 40px 0;
+            padding: 10px 30px;
+            background: var(--rose-pink);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-weight: bold;
+            z-index: 20;
+            transition: 0.3s;
+        }
+
+        .btn-back:hover {
+            background: #c9184a;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 480px) {
+            .photo-container img {
+                width: 160px;
+                height: 200px;
+            }
+            .caption { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="color: var(--rose-pink); z-index: 10; font-family: 'Brush Script MT', cursive; font-size: 3rem;">My Ella ❤️</h1>
+
+    <div class="gallery-container">
+        <div class="photo-container">
+            <img src="baby1.jpg" alt="Moment 1">
+            <div class="caption"></div>
+        </div>
+
+        <div class="photo-container">
+            <img src="flower1.jpg" alt="Moment 2">
+            <div class="caption"></div>
+        </div>
+
+         <div class="photo-container">
+            <img src="baby2.jpg" alt="Moment 3">
+            <div class="caption"></div>
+        </div>
+
+        <div class="photo-container">
+            <img src="flower2.jpg" alt="Moment 4">
+            <div class="caption"></div>
+        </div>
+
+        <div id="lightbox" class="lightbox">
+            <span class="close-lightbox"></span>
+            <img class="lightbox-content" id="lightbox-img">
+            <div id="caption" class="lightbox-caption"></div>
+        </div>
+
+    </div>
+
+    <a href="rose.html" class="btn-back">Back to Rose</a>
+    <a href="game.html" class="btn-back">Proceed to Game</a>
+
+    <script>
+        function createHearts() {
+            const container = document.body;
+            // Increased heart count for the longer gallery page
+            for (let i = 0; i < 25; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-bg';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(heart);
+            }
+        }
+        createHearts();
+    </script>
+
+    <audio id="globalMusic" loop>
+    <source src="untilifoundyou.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    window.onload = function() {
+        const audio = document.getElementById('globalMusic');
+        const isMusicPlaying = localStorage.getItem('musicPlaying');
+        const savedTime = localStorage.getItem('musicTimestamp');
+
+        if (isMusicPlaying === 'true') {
+            // 1. Set the time immediately before playing
+            if (savedTime) {
+                // We add a tiny offset (0.1s) to account for page load lag
+                audio.currentTime = parseFloat(savedTime) + 0.1;
+            }
+
+            // 2. Start with volume at 0 for a smooth fade-in
+            audio.volume = 0;
+            
+            audio.play().then(() => {
+                // 3. Smooth Fade-In effect
+                let vol = 0;
+                const fadeIn = setInterval(() => {
+                    if (vol < 1) {
+                        vol += 0.05;
+                        audio.volume = Math.min(vol, 1);
+                    } else {
+                        clearInterval(fadeIn);
+                    }
+                }, 50); // Increase volume every 50ms
+            }).catch(error => {
+                console.log("Interaction required to resume music.");
+            });
+        }
+
+        // 4. Ultra-fast Sync (Updates every 100ms instead of 500ms)
+        // This makes sure that if the user clicks a link suddenly, 
+        // the saved timestamp is as accurate as possible.
+        setInterval(() => {
+            if (!audio.paused) {
+                localStorage.setItem('musicTimestamp', audio.currentTime);
+            }
+        }, 100);
+    };
+
+    // 5. Save exactly when the user clicks a link/leaves
+    window.onbeforeunload = function() {
+        const audio = document.getElementById('globalMusic');
+        if (audio) {
+            localStorage.setItem('musicTimestamp', audio.currentTime);
+        }
+    };
+</script>
+
+</body>
+</html>
